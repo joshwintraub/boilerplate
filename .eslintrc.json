@@ -1,0 +1,12 @@
+{
+  "root": true,
+  "extends": [
+    "fullstack",
+    "prettier",
+    "eslint:recommended",
+    "plugin:react/recommended"
+  ],
+  "rules": {
+    "semi": 0
+  }
+}
