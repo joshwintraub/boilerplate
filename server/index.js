@@ -4,6 +4,7 @@ const express = require('express');
 const path = require('path')
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
+const db = require('./db/database');
 
 const app = express();
 
@@ -34,9 +35,13 @@ app.use((error, req, res, next) => {
 
 // Start the server
 const PORT = process.env.PORT || 4000;
-app.listen(PORT, function () {
-  console.log('App listen functionhas run');
-  console.log(`Server is listening on port ${PORT}`);
-});
+db.sync({ force: true })
+  .then(() => {
+    console.log('db synced')
+    app.listen(PORT, function () {
+      console.log('App listen function has run');
+      console.log(`Server is listening on port ${PORT}`);
+    });
+  });
 
 module.exports = app;
