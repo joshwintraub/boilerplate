@@ -5,11 +5,50 @@ const path = require('path')
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const db = require('./db');
+const PORT = process.env.PORT || 4000;
+const session = require('express-session');
+const SequelizeStore = require('connect-session-sequelize')(session.Store);
+const dbStore = new SequelizeStore({ db: db });
+const passport = require('passport');
 
 const app = express();
 
-// logging middleware
+// Passport registration
+passport.serializeUser((user, done) => {
+  try {
+    done(null, user.id);
+  } catch (error) {
+    done(error);
+  }
+});
+
+passport.deserializeUser(async (id, done) => {
+  try {
+    const user = await user.findByPk(id);
+    done(null, user);
+  } catch (error) {
+    done(error);
+  }
+});
+
+// Logging middleware
 app.use(morgan('dev'));
+
+
+// Session middleware with passport
+
+// Sync so that session table is created
+dbStore.sync();
+
+app.use(session({
+  secret: process.env.SESSION_SECRET || 'this is the secret',
+  store: dbStore,
+  resave: false,
+  saveUninitialized: false
+}));
+
+app.use(passport.initialize());
+app.use(passport.session());
 
 // static middleware
 app.use(express.static(path.join(__dirname, '../public')));
@@ -34,7 +73,6 @@ app.use((error, req, res, next) => {
 });
 
 // Start the server
-const PORT = process.env.PORT || 4000;
 db.sync({ force: true })
   .then(() => {
     console.log('db synced')

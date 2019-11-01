@@ -14,6 +14,6 @@
 // Puppy.belongsTo(Owner)
 
 const db = require('./database');
-const Model = require('./models/Model');
+const User = require('./models/User');
 
 module.exports = db;
