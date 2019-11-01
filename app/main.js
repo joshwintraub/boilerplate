@@ -6,7 +6,10 @@ import '../public/style.css';
 
 ReactDOM.render(
   <Provider store={store}>
-    <div> Hello World!</div >
+    <div>
+      Hello World!
+      <p>App is working</p>
+    </div >
   </Provider>,
   document.getElementById('main')
 );

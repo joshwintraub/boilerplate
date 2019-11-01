@@ -58,7 +58,8 @@ app.use(express.static(path.join(__dirname, '../public')));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-//API (to include routes)
+//API (to include routes), and auth
+app.use('/auth', require('./auth'));
 app.use('/api', require('./api'));
 
 // Send index.html for ay other requests
@@ -73,7 +74,7 @@ app.use((error, req, res, next) => {
 });
 
 // Start the server
-db.sync({ force: true })
+db.sync() // { force: true }
   .then(() => {
     console.log('db synced')
     app.listen(PORT, function () {
